@@ -1,9 +1,10 @@
 {
-  "name": "tester",
-  "version": "1.0.0",
-  "description": "",
+  "name": "proxy_tester",
+  "version": "1.0.2",
+  "description": "update different site",
   "main": "index.js",
   "dependencies": {
+    "dotenv": "^8.2.0",
     "express": "^4.17.1",
     "request": "^2.88.2"
   },

@@ -1,6 +1,9 @@
 ﻿const express = require('express');
 const request = require('request');
 const fs = require('fs');
+const env = require('dotenv');
+
+env.config();
 
 //利用插件形式使require读取txt 返回字符串形式
 require.extensions['.txt'] = function (module, filename) {
@@ -34,24 +37,55 @@ function reqProxy(proxy) {
     return testProxy;
 }
 
-function check(proxy, callback) {
+function check(proxy, site, callback) {
+    let url = null;
     let headers = {
         "Accept": "*/*",
-        "Accept-Encoding": "gzip, deflate, br",
-        //"User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'
+        "Accept-Encoding": "gzip, deflate, br"
     };
+    switch (site) {
+        case 'kith':
+            url = 'https://www.kith.com';
+            headers = {
+                "Accept": "*/*",
+                "Accept-Encoding": "gzip, deflate, br",
+                "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'
+            };
+            break;
+        case 'ys':
+            url = 'https://www.yeezysupply.com';
+            break;
+        case 'supreme':
+            url = 'https://www.supremenewyork.com';
+            break;
+        case 'footlocker':
+            url = 'https://www.footlocker.com';
+            break;
+        case 'nike':
+            url = 'https://www.nike.com';
+            headers = {
+                "Accept": "*/*",
+                "Accept-Encoding": "gzip, deflate, br",
+                "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'
+            };
+            break;
+        default:
+            site = google;
+            url = 'https://www.google.com';
+            break;
+    }
     for (let i = 0; i < proxy.length; i++) {
         request({
-            url: 'https://www.yeezysupply.com',
+            url: url,
             headers,
             proxy: proxy[i],
             time: true,
             timeout: 1500
         }, (err, response, body) => {
             if (!err && response.statusCode === 200) {
-                console.log(`${proxy[i]} result : ${response.responseStartTime - response.timingStart} ms`);
+                console.log(`Testing site : ${site} ,${proxy[i]} result : ${response.responseStartTime - response.timingStart} ms`);
                 let timing = response.responseStartTime - response.timingStart;
-                if (timing > 1500) {
+                if (timing > process.env.DELAY) {
                     proxy.splice(i, 1);
                 }
             } else if (err && err.message.match(/403/)) {
@@ -59,7 +93,7 @@ function check(proxy, callback) {
                 console.log('proxy banned');
             } else {
                 proxy.splice(i, 1);
-                console.log(err.message);
+                console.log('proxy failed');
             }
             if (callback && typeof (callback) == 'function') {
                 callback(proxy);
@@ -67,7 +101,8 @@ function check(proxy, callback) {
         })
     }
 }
-check(reqProxy(arrProxies), (proxy) => {
+
+check(reqProxy(arrProxies), process.env.TESTING_SITE, (proxy) => {
     let proxyResult = [];
     proxy.forEach((item) => {
         let index = item.lastIndexOf('\/');
