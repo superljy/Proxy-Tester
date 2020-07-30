@@ -104,8 +104,10 @@ check(reqProxy(arrProxies), process.env.TESTING_SITE, (proxy) => {
         item = item.substring(index + 1).split('@').reverse().join(':');
         proxyResult.push(item);
     });
-    fs.writeFileSync('./filted-proxies.txt', proxyResult.join('\n'), (err) => {
-        if (err) throw err;
-        console.log('done');
+    fs.writeFile('./filted-proxies.txt', proxyResult.join('\n'), (err) => {
+        if (err) {
+            console.log(err);
+        }
+        console.log('done~');
     })
 });
