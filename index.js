@@ -70,7 +70,7 @@ function check(proxy, site, callback) {
             };
             break;
         default:
-            site = google;
+            site = 'google';
             url = 'https://www.google.com';
             break;
     }
