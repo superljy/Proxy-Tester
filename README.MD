@@ -3,6 +3,7 @@ _目前是只运行在node上,没有UI界面_
 ----
 
 ## 使用方法
+> - 将想要测试的proxy放入`proxies/proxies.txt`中
 > - 自行新建`.env`文件,作为环境变量,控制测试的对应网站和希望筛选多少延迟以下的proxy
 > - `.env`内全部用`大写`的英文字母,建立`TESTING_SITE`和`DELAY`这两个变量
 > - `TESTING_SITE`的值表示需要测试的网站,目前支持如下网站:
