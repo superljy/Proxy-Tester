@@ -63,11 +63,6 @@ function check(proxy, site, callback) {
             break;
         case 'nike':
             url = 'https://www.nike.com';
-            headers = {
-                "Accept": "*/*",
-                "Accept-Encoding": "gzip, deflate, br",
-                "User-Agent": 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/84.0.4147.89 Safari/537.36'
-            };
             break;
         default:
             site = 'google';
